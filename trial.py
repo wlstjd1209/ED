@@ -93,7 +93,7 @@ if st.session_state["onoff"]:
     def trans(text):
         if st.session_state["translation"] == "ON":
             result = deepl_client.translate_text(text, source_lang="EN", target_lang="KO")
-            st.markdown(f"↪ {result.text}")
+            st.markdown(f"➥ {result.text}")
 
     def addhistory():
         if st.session_state["word"] in st.session_state["history"]:
@@ -369,6 +369,7 @@ if st.session_state["onoff"]:
 qjsdur = True
 
         
+
 
 
 
