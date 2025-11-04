@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-import streamlit-authenticator as stauth
+import streamlit_authenticator as stauth
 import pandas as pd
 import time
 
@@ -313,3 +313,4 @@ if st.session_state["onoff"]:
 
 
         
+
