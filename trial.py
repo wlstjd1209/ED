@@ -3,8 +3,13 @@ import requests
 import streamlit_authenticator as stauth
 import pandas as pd
 import time
+import deepl
+
 
 st.set_page_config(page_title="영어 단어 사전", page_icon="📚")
+
+auth_key = "9d5da70c-93eb-4da3-94a6-7e33315d0f32:fx" # Replace with your key
+deepl_client = deepl.DeepLClient(auth_key)
 
 st.title("Login")
 
@@ -22,6 +27,7 @@ with st.form("login_form"):
 if submit_button:
     if not ID or not PW:
         st.warning("ID와 비밀번호를 모두 입력해주세요.")
+        st.session_state["onoff"] = ""
     else:
         # 사용자 확인
         user = data[(data["ID"] == ID) & (data["PW"] == str(PW))]
@@ -43,21 +49,51 @@ if submit_button:
             
             
         else:
-            st.error("아이디 또는 비밀번호가 일치하지 않습니다.")
+            st.error("⚠ 아이디 또는 비밀번호가 일치하지 않습니다.")
+            st.session_state["onoff"] = ""
 
 
 if st.session_state["onoff"]:
     
     "---"
     
-    st.title("📚 영어 단어 사전")
-    
+    if "translation" not in st.session_state:
+        st.session_state["translation"] = "OFF"
     if "history" not in st.session_state:
         st.session_state["history"] = []
     if "word" not in st.session_state:
         st.session_state["word"] = ""
     if "message" not in st.session_state:
         st.session_state["message"] = ""
+
+    col5, col6, col7 = st.columns([5,2,1])
+
+    with col5:
+        st.title("📚 영어 단어 사전")
+
+    with col6:
+        st.write("")
+        translation_button = st.button("번역모드 ON / OFF", key="translation_btn")
+        if translation_button:
+            if st.session_state["translation"] == "OFF":
+                st.session_state["translation"] = "ON"
+            elif st.session_state["translation"] == "ON":
+                st.session_state["translation"] = "OFF"
+
+    with col7:
+        st.write("")
+        icon = "🟢" if st.session_state["translation"] == "ON" else "🔴"
+        st.markdown(f'#### {icon}')
+    
+    # st.markdown(
+    #     "<p style='text-align:right; color:gray;'>⚠ 번역에는 다소 시간이 걸릴 수 있습니다.</p>",
+    #     unsafe_allow_html=True
+    # )
+
+    def trans(text):
+        if st.session_state["translation"] == "ON":
+            result = deepl_client.translate_text(text, source_lang="EN", target_lang="KO")
+            st.markdown(f"» {result.text}")
 
     def addhistory():
         if st.session_state["word"] in st.session_state["history"]:
@@ -130,6 +166,9 @@ if st.session_state["onoff"]:
             unsafe_allow_html=True
         )
 
+    if st.session_state["translation"] == "ON":
+        with st.spinner("🛠 번역에는 다소 시간이 걸릴 수 있습니다..."):
+            time.sleep(2)
 
     if wordinput:  # "" -> False, "bla-bla~" -> True
         url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{wordinput}"
@@ -193,7 +232,7 @@ if st.session_state["onoff"]:
                         else:
                             st.markdown(f"###### 🍳{meanpos}")
                     
-                    with st.expander("📖 정의&예문"):
+                    with st.expander("📖 정의"):
                         kkk=0
                         if "definitions" in mean:
 
@@ -207,10 +246,19 @@ if st.session_state["onoff"]:
                                     else:
                                         meanex = "NOT FOUND"
                                     st.markdown(f"{kkk}. :orange[{meandef}]")
+                                    # 번역
+                                    if st.session_state["translation"] == "ON":
+                                        trans(meandef)
+                                
+
                                     if meanex == "NOT FOUND":
                                         st.caption("EXAMPLE IS NOT FOUND")
                                     else:
                                         st.caption(f"ex) {meanex}")
+                                        # 번역
+                                        if st.session_state["translation"] == "ON":
+                                            trans(meanex)
+                                        
                                                 
                     with st.expander("📙 유의어"):
                         if "synonyms" in mean:
@@ -222,6 +270,10 @@ if st.session_state["onoff"]:
                             else:
                                 for kkkk, meansyn in enumerate(dbdmldjemf, start = 1):
                                     st.markdown(f"{kkkk}. :orange[{meansyn}]")
+                                    # 번역
+                                    if st.session_state["translation"] == "ON":
+                                        trans(meansyn)
+                                 
                         else:
                             st.caption(f"SYNONYM IS NOT FOUND")
 
@@ -236,6 +288,10 @@ if st.session_state["onoff"]:
                             else:
                                 for kkkkk, meanant in enumerate(qksdmldjemf, start = 1):
                                     st.markdown(f"{kkkkk}. :orange[{meanant}]")
+                                    # 번역
+                                    if st.session_state["translation"] == "ON":
+                                        trans(meanant)
+                               
                         else:
                             st.caption(f"ANTONYM IS NOT FOUND")
 
@@ -282,7 +338,7 @@ if st.session_state["onoff"]:
                                 else:
                                     continue
                                 st.audio(audioresponse.content, format = "audio/mp3")
-
+         
 
 
 
@@ -310,7 +366,7 @@ if st.session_state["onoff"]:
     else:
         st.warning("단어를 입력해주세요.")
 
-
+qjsdur = True
 
         
 
