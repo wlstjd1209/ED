@@ -45,14 +45,13 @@ if submit_button:
         else:
             st.error("아이디 또는 비밀번호가 일치하지 않습니다.")
 
-"---"
-"---"
+
 if st.session_state["onoff"]:
-
     
-
+    "---"
+    
     st.title("📚 영어 단어 사전")
-    # 
+    
     if "history" not in st.session_state:
         st.session_state["history"] = []
     if "word" not in st.session_state:
@@ -314,3 +313,4 @@ if st.session_state["onoff"]:
 
 
         
+
