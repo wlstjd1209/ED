@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-import streamlit_authenticator as stauth
+import streamlit-authenticator as stauth
 import pandas as pd
 import time
 
@@ -308,6 +308,7 @@ if st.session_state["onoff"]:
             st.error(f"""단어 정보를 가져오는 데 실패했습니다💦 (상태 코드 : **{response.status_code}**)""")
     else:
         st.warning("단어를 입력해주세요.")
+
 
 
 
