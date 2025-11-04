@@ -4,6 +4,8 @@ import streamlit_authenticator as stauth
 import pandas as pd
 import time
 
+st.set_page_config(page_title="영어 단어 사전", page_icon="📚")
+
 st.title("Login")
 
 if "onoff" not in st.session_state:
@@ -47,7 +49,7 @@ if submit_button:
 "---"
 if st.session_state["onoff"]:
 
-    st.set_page_config(page_title="영어 단어 사전", page_icon="📚")
+    
 
     st.title("📚 영어 단어 사전")
     # 
@@ -311,6 +313,4 @@ if st.session_state["onoff"]:
 
 
 
-
         
-
