@@ -51,7 +51,9 @@ if submit_button:
         else:
             st.error("⚠ 아이디 또는 비밀번호가 일치하지 않습니다.")
             st.session_state["onoff"] = ""
-
+if not st.session_state["onoff"]:
+    with st.expander("ID & PW"):
+        st.json(pd.read.csv("members.csv")
 
 if st.session_state["onoff"]:
     
@@ -369,6 +371,7 @@ if st.session_state["onoff"]:
 qjsdur = True
 
         
+
 
 
 
