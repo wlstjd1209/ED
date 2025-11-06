@@ -53,7 +53,7 @@ if submit_button:
             st.session_state["onoff"] = ""
 if not st.session_state["onoff"]:
     with st.expander("ID & PW"):
-        st.json(pd.read.csv("members.csv")
+        st.json(pd.read.csv("members.csv"))
 
 if st.session_state["onoff"]:
     
@@ -371,6 +371,7 @@ if st.session_state["onoff"]:
 qjsdur = True
 
         
+
 
 
 
